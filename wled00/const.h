@@ -483,10 +483,10 @@
 #endif
 
 #ifdef WLED_ENABLE_DMX
-#if (LEDPIN == 2)
+#if (LEDPIN == 16)
   #undef LEDPIN
-  #define LEDPIN 1
-  #warning "Pin conflict compiling with DMX and LEDs on pin 2. The default LED pin has been changed to pin 1."
+  #define LEDPIN 2
+  #warning "Pin conflict compiling with DMX and LEDs on pin 16. The default LED pin has been changed to pin 2."
 #endif
 #endif
 

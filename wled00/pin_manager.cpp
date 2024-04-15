@@ -192,7 +192,7 @@ String PinManagerClass::getPinSpecialText(int gpio) {  // special purpose PIN in
   #endif
 
   #ifdef WLED_ENABLE_DMX
-    if (gpio == 2) return(F("hardcoded DMX output pin"));
+    if (gpio == 16) return(F("hardcoded DMX output pin - updated by drew"));
   #endif
 
   //
