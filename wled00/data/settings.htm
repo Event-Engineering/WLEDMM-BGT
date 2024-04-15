@@ -42,7 +42,7 @@
 				urows="";
 				if (isO(umCfg)) {
 					for (const [k,o] of Object.entries(umCfg)) {
-							urows += `<button type="submit" onclick="window.location=\'./settings/um?um=${k}\'">${k} (UM ☾)</button>`;
+							urows += `<button type="submit" onclick="window.location=\'./settings/um?um=${k}\'">${k}</button>`;
 					}
 				}
 				gId("configMenu").innerHTML = urows;
