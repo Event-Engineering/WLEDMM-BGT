@@ -11,6 +11,10 @@
  */
 //#include "../usermods/EXAMPLE_v2/usermod_v2_example.h"
 
+#ifdef USERMOD_BGT
+#include "../usermods/_EE_BGT/bgt.h"
+#endif
+
 #ifdef USERMOD_BATTERY
 #include "../usermods/Battery/usermod_v2_Battery.h"
 #endif
@@ -212,6 +216,10 @@ void registerUsermods()
    * \/ \/ \/
    */
   //usermods.add(new MyExampleUsermod());
+#ifdef USERMOD_BGT
+  usermods.add(new Usermod_BGT());
+#endif
+
 #ifdef USERMOD_BATTERY
   usermods.add(new UsermodBattery("Battery", false));  // WLEDMM
 #endif
