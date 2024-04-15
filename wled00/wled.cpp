@@ -624,7 +624,7 @@ pinManager.allocateMultiplePins(pins, sizeof(pins)/sizeof(managed_pin_type), Pin
   pinManager.manageDebugTXPin();
 
 #ifdef WLED_ENABLE_DMX //reserve GPIO2 as hardcoded DMX pin
-  pinManager.allocatePin(2, true, PinOwner::DMX);
+  pinManager.allocatePin(16, true, PinOwner::DMX);
 #endif
 
 #if defined(ALL_JSON_TO_PSRAM) && defined(WLED_USE_PSRAM_JSON)
