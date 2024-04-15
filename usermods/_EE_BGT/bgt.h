@@ -37,32 +37,21 @@ class Usermod_BGT : public Usermod {
 
   public:
 
-    // gets called once at boot. Do all initialization that doesn't depend on
-    // network here
     void setup() {
 
-        Wire.begin(15,14);
         mcpConnected = mcp.begin_I2C();
         if (mcpConnected) {
             Serial.print("Connected to MCP Switch Interface");
         } else {
             Serial.print("Not Connected to MCP Switch Interface");
         }
-        
-        
         serializeConfig(); // slow but forces a sync with the settings system
     }
 
-    // gets called every time WiFi is (re-)connected. Initialize own network
-    // interfaces here
-    void connected() {}
 
-    /**
-     * Da loop.
-     */
     void loop() {
-      if (millis() - lastTime < updateEvery || strip.isUpdating() || !mcpConnected) return;
-      lastTime = millis();
+        if (millis() - lastTime < updateEvery || strip.isUpdating() || !mcpConnected) return;
+        lastTime = millis();
 
         for (int b = 0; b<6; b++) {
             bool reading = mcp.digitalRead(b);
@@ -135,7 +124,7 @@ class Usermod_BGT : public Usermod {
     }
 
     void handleReset() {
-        Serial.print("Reset system - load preset "); Serial.println(resetPreset);
+        Serial.print("Reset system -- Loading preset: "); Serial.println(resetPreset);
         goldMode = false;
         applyPreset(resetPreset);
 
@@ -143,7 +132,7 @@ class Usermod_BGT : public Usermod {
     }
 
     void handleShutdown() {
-        Serial.print("Shutting down -- loading preset: "); Serial.println(shutdownPreset);
+        Serial.print("Shutting down -- Loading preset: "); Serial.println(shutdownPreset);
         applyPreset(shutdownPreset);
 
     }
@@ -156,32 +145,7 @@ class Usermod_BGT : public Usermod {
         }
     }
 
-    /*
-     * addToJsonInfo() can be used to add custom entries to the /json/info part of the JSON API.
-     * Creating an "u" object allows you to add custom key/value pairs to the Info section of the WLED web UI.
-     * Below it is shown how this could be used for e.g. a light sensor
-     */
-    // void addToJsonInfo(JsonObject& root) {
-    //   JsonObject user = root["u"];
-    //   if (user.isNull()) user = root.createNestedObject("u");
-    //   JsonArray data = user.createNestedArray(F("4LineDisplay"));
-    //   data.add(F("Loaded."));
-    // }
 
-    /*
-     * addToJsonState() can be used to add custom entries to the /json/state part of the JSON API (state object).
-     * Values in the state object may be modified by connected clients
-     */
-    // void addToJsonState(JsonObject& root) {
-    // }
-
-    /*
-     * readFromJsonState() can be used to receive data clients send to the /json/state part of the JSON API (state object).
-     * Values in the state object may be modified by connected clients
-     */
-    // void readFromJsonState(JsonObject& root) {
-    //  if (!initDone) return;  // prevent crash on boot applyPreset()
-    // }
 
     /*
      * addToConfig() can be used to add custom persistent settings to the cfg.json file in the "um" (usermod) object.
@@ -197,19 +161,19 @@ class Usermod_BGT : public Usermod {
      * 
      * I highly recommend checking out the basics of ArduinoJson serialization and deserialization in order to use custom settings!
      */
-    // void addToConfig(JsonObject& root) {
-    //   JsonObject top   = root.createNestedObject("Britains Got Talent");
+    void addToConfig(JsonObject& root) {
+      JsonObject top   = root.createNestedObject("Britains Got Talent");
 
-    //   top["Update Buttons Every"] = updateEvery; // help for Settings page
-    //   top["Golden Buzzer Timeout"] = goldTimeout;
-    //   top["Reset Button Long Press Time"] = longPressTime;
+      top["Update Buttons Every"] = updateEvery; // help for Settings page
+      top["Golden Buzzer Timeout"] = goldTimeout;
+      top["Reset Button Long Press Time"] = longPressTime;
 
-    //   top["Preset Number For Golden Buzzer"] = goldenPreset;
-    //   top["Preset Number For Reset"] = resetPreset;
-    //   top["Preset Number For Shutdown"] = shutdownPreset;
+      top["Preset Number For Golden Buzzer"] = goldenPreset;
+      top["Preset Number For Reset"] = resetPreset;
+      top["Preset Number For Shutdown"] = shutdownPreset;
 
-    //   top["Golden Buzzer GPIO Output Pin"] = goldenGPIOOutputPin;
-    // }
+      top["Golden Buzzer GPIO Output Pin"] = goldenGPIOOutputPin;
+    }
 
     /*
      * readFromConfig() can be used to read back the custom settings you added with addToConfig().
@@ -219,25 +183,18 @@ class Usermod_BGT : public Usermod {
      * but also that if you want to write persistent values to a dynamic buffer, you'd need to allocate it here instead of in setup.
      * If you don't know what that is, don't fret. It most likely doesn't affect your use case :)
      */
-    // bool readFromConfig(JsonObject& root) {
-    //     JsonObject top = root["Britains Got Talent"];
+    bool readFromConfig(JsonObject& root) {
+        JsonObject top = root["Britains Got Talent"];
 
-    //   updateEvery = top["Update Buttons Every"] | updateEvery;
-    //   goldTimeout = top["Golden Buzzer Timeout"] | goldTimeout;
-    //   longPressTime = top["Reset Button Long Press Time"] | longPressTime;
+      updateEvery = top["Update Buttons Every"] | updateEvery;
+      goldTimeout = top["Golden Buzzer Timeout"] | goldTimeout;
+      longPressTime = top["Reset Button Long Press Time"] | longPressTime;
 
-    //   goldenPreset = top["Preset Number For Golden Buzzer"] | goldenPreset;
-    //   resetPreset = top["Preset Number For Reset"] | resetPreset;
-    //   shutdownPreset = top["Preset Number For Shutdown"] | shutdownPreset;
+      goldenPreset = top["Preset Number For Golden Buzzer"] | goldenPreset;
+      resetPreset = top["Preset Number For Reset"] | resetPreset;
+      shutdownPreset = top["Preset Number For Shutdown"] | shutdownPreset;
 
-    //   goldenGPIOOutputPin = top["Golden Buzzer GPIO Output Pin"] | goldenGPIOOutputPin;
-    // }
+      goldenGPIOOutputPin = top["Golden Buzzer GPIO Output Pin"] | goldenGPIOOutputPin;
+    }
 
-    /*
-     * getId() allows you to optionally give your V2 usermod an unique ID (please define it in const.h!).
-     * This could be used in the future for the system to determine whether your usermod is installed.
-     */
-    // uint16_t getId() {
-    //   return USERMOD_DOUGHBALL_SWITCHINTERFACE;
-    // }
 };
